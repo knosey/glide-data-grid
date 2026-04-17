@@ -1,10 +1,8 @@
-import { renderHook, cleanup } from "@testing-library/react-hooks";
+import { renderHook } from "@testing-library/react";
 import { useDeepMemo } from "../src/common/utils.js";
-import { expect, describe, it, afterEach } from "vitest";
+import { expect, describe, it } from "vitest";
 
 describe("useDeepMemo", () => {
-    afterEach(cleanup);
-
     it("returns the initial value", () => {
         const initialValue = { a: 1 };
         const { result } = renderHook(() => useDeepMemo(initialValue));

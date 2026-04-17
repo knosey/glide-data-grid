@@ -36,7 +36,7 @@ interface DataGridOverlayEditorProps {
     readonly onFinishEditing: (newCell: GridCell | undefined, movement: readonly [-1 | 0 | 1, -1 | 0 | 1]) => void;
     readonly forceEditMode: boolean;
     readonly highlight: boolean;
-    readonly portalElementRef?: React.RefObject<HTMLElement>;
+    readonly portalElementRef?: React.RefObject<HTMLElement | null>;
     readonly imageEditorOverride?: ImageEditorType;
     readonly getCellRenderer: GetCellRendererCallback;
     readonly markdownDivCreateNode?: (content: string) => DocumentFragment;

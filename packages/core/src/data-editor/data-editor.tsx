@@ -695,7 +695,7 @@ export interface DataEditorProps extends Props, Pick<DataGridSearchProps, "image
     /**
      * Allows overriding the default portal element.
      */
-    readonly portalElementRef?: React.RefObject<HTMLElement>;
+    readonly portalElementRef?: React.RefObject<HTMLElement | null>;
 }
 
 type ScrollToFn = (
@@ -786,7 +786,7 @@ const DataEditorImpl: React.ForwardRefRenderFunction<DataEditorRef, DataEditorPr
     const searchInputRef = React.useRef<HTMLInputElement | null>(null);
     const canvasRef = React.useRef<HTMLCanvasElement | null>(null);
     const [mouseState, setMouseState] = React.useState<MouseState>();
-    const lastSent = React.useRef<[number, number]>();
+    const lastSent = React.useRef<[number, number]>(undefined);
 
     const safeWindow = typeof window === "undefined" ? null : window;
 
@@ -971,16 +971,16 @@ const DataEditorImpl: React.ForwardRefRenderFunction<DataEditorRef, DataEditorPr
     }, [gridSelectionOuter, rowMarkerOffset]);
     const gridSelection = gridSelectionOuterMangled ?? gridSelectionInner;
 
-    const abortControllerRef = React.useRef() as React.MutableRefObject<AbortController>;
+    const abortControllerRef = React.useRef<AbortController | undefined>(undefined);
     if (abortControllerRef.current === undefined) abortControllerRef.current = new AbortController();
 
-    React.useEffect(() => () => abortControllerRef?.current.abort(), []);
+    React.useEffect(() => () => abortControllerRef.current!.abort(), []);
 
     const [getCellsForSelection, getCellsForSeletionDirect] = useCellsForSelection(
         getCellsForSelectionIn,
         getCellContent,
         rowMarkerOffset,
-        abortControllerRef.current,
+        abortControllerRef.current!,
         rows
     );
 
@@ -1002,7 +1002,7 @@ const DataEditorImpl: React.ForwardRefRenderFunction<DataEditorRef, DataEditorPr
                     getCellsForSelection,
                     rowMarkerOffset,
                     spanRangeBehavior,
-                    abortControllerRef.current
+                    abortControllerRef.current!
                 );
             }
             if (onGridSelectionChange !== undefined) {
@@ -1124,7 +1124,7 @@ const DataEditorImpl: React.ForwardRefRenderFunction<DataEditorRef, DataEditorPr
         maxColumnAutoWidth,
         mergedTheme,
         getCellRenderer,
-        abortControllerRef.current
+        abortControllerRef.current!
     );
     if (rowMarkers !== "none") nonGrowWidth += rowMarkerWidth;
 
@@ -1815,8 +1815,8 @@ const DataEditorImpl: React.ForwardRefRenderFunction<DataEditorRef, DataEditorPr
         [columns, columnsIn, hasRowMarkers, trailingRowOptions?.targetColumn]
     );
 
-    const lastSelectedRowRef = React.useRef<number>();
-    const lastSelectedColRef = React.useRef<number>();
+    const lastSelectedRowRef = React.useRef<number>(undefined);
+    const lastSelectedColRef = React.useRef<number>(undefined);
 
     const themeForCell = React.useCallback(
         (cell: InnerGridCell, pos: Item): FullTheme => {
@@ -2086,13 +2086,13 @@ const DataEditorImpl: React.ForwardRefRenderFunction<DataEditorRef, DataEditorPr
         ]
     );
     const isActivelyDraggingHeader = React.useRef(false);
-    const lastMouseSelectLocation = React.useRef<readonly [number, number]>();
+    const lastMouseSelectLocation = React.useRef<readonly [number, number]>(undefined);
     const touchDownArgs = React.useRef(visibleRegion);
     const mouseDownData = React.useRef<{
         time: number;
         button: number;
         location: Item;
-    }>();
+    }>(undefined);
     const onMouseDown = React.useCallback(
         (args: GridMouseEventArgs) => {
             isPrevented.current = false;
@@ -2202,7 +2202,7 @@ const DataEditorImpl: React.ForwardRefRenderFunction<DataEditorRef, DataEditorPr
                         width: 1,
                         height: Math.min(end, rows - start),
                     },
-                    abortControllerRef.current.signal
+                    abortControllerRef.current!.signal
                 );
                 if (typeof cells !== "object") {
                     cells = await cells();
@@ -2265,7 +2265,7 @@ const DataEditorImpl: React.ForwardRefRenderFunction<DataEditorRef, DataEditorPr
                 if (canceled) return;
             }
 
-            let cells = getCellsForSelection(patternRange, abortControllerRef.current.signal);
+            let cells = getCellsForSelection(patternRange, abortControllerRef.current!.signal);
             if (typeof cells !== "object") cells = await cells();
 
             const pattern = cells;
@@ -2724,7 +2724,7 @@ const DataEditorImpl: React.ForwardRefRenderFunction<DataEditorRef, DataEditorPr
         [mapper, rowGroupingSelectionBehavior]
     );
 
-    const hoveredRef = React.useRef<GridMouseEventArgs>();
+    const hoveredRef = React.useRef<GridMouseEventArgs>(undefined);
     const onItemHoveredImpl = React.useCallback(
         (args: GridMouseEventArgs) => {
             // make sure we still have a button down
@@ -2934,7 +2934,7 @@ const DataEditorImpl: React.ForwardRefRenderFunction<DataEditorRef, DataEditorPr
                                 width: right - left - rowMarkerOffset,
                                 height: bottom - top,
                             },
-                            abortControllerRef.current.signal
+                            abortControllerRef.current!.signal
                         );
 
                         if (typeof cells === "object") {
@@ -3799,7 +3799,7 @@ const DataEditorImpl: React.ForwardRefRenderFunction<DataEditorRef, DataEditorPr
 
             if (focused && getCellsForSelection !== undefined) {
                 if (gridSelection.current !== undefined) {
-                    let thunk = getCellsForSelection(gridSelection.current.range, abortControllerRef.current.signal);
+                    let thunk = getCellsForSelection(gridSelection.current.range, abortControllerRef.current!.signal);
                     if (typeof thunk !== "object") {
                         thunk = await thunk();
                     }
@@ -3820,7 +3820,7 @@ const DataEditorImpl: React.ForwardRefRenderFunction<DataEditorRef, DataEditorPr
                                 width: columnsIn.length,
                                 height: 1,
                             },
-                            abortControllerRef.current.signal
+                            abortControllerRef.current!.signal
                         );
                         if (typeof thunk === "object") {
                             return thunk[0];
@@ -3844,7 +3844,7 @@ const DataEditorImpl: React.ForwardRefRenderFunction<DataEditorRef, DataEditorPr
                                 width: 1,
                                 height: rows,
                             },
-                            abortControllerRef.current.signal
+                            abortControllerRef.current!.signal
                         );
                         if (typeof thunk !== "object") {
                             thunk = await thunk();
@@ -4221,7 +4221,8 @@ const DataEditorImpl: React.ForwardRefRenderFunction<DataEditorRef, DataEditorPr
                 style={cssStyle}
                 className={className}
                 inWidth={width ?? idealWidth}
-                inHeight={height ?? idealHeight}>
+                inHeight={height ?? idealHeight}
+            >
                 <DataGridSearch
                     fillHandle={fillHandle}
                     drawFocusRing={drawFocusRing}

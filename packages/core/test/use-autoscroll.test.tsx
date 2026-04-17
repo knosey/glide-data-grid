@@ -1,15 +1,11 @@
-import { renderHook, cleanup } from "@testing-library/react-hooks";
+import { renderHook } from "@testing-library/react";
 import { useAutoscroll } from "../src/data-editor/use-autoscroll.js";
-import { vi, expect, describe, it, afterEach } from "vitest";
+import { vi, expect, describe, it } from "vitest";
 
 describe("use-auto-scroll", () => {
     // beforeEach(() => {
     //     vi.spyOn(window, "requestAnimationFrame").mockImplementation(cb => window.setTimeout(cb, 16));
     // });
-
-    afterEach(async () => {
-        await cleanup();
-    });
 
     it("No scroll test", async () => {
         const scrollBy = vi.fn();

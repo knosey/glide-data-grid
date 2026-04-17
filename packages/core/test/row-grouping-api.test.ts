@@ -1,32 +1,28 @@
-import { describe, it, expect, afterEach } from "vitest";
-import { renderHook, cleanup } from "@testing-library/react-hooks";
+import { describe, it, expect } from "vitest";
+import { renderHook } from "@testing-library/react";
 import { useRowGrouping } from "../src/data-editor/row-grouping-api.js";
 import type { RowGroupingOptions } from "../src/data-editor/row-grouping.js";
 
 describe("useRowGrouping - mapper", () => {
-    afterEach(async () => {
-        await cleanup();
-    });
-
     it("calculates rows correctly with no row grouping options", () => {
         const totalRows = 5;
         const { result } = renderHook(() => useRowGrouping(undefined, totalRows));
 
         expect(result.current.mapper(0)).toEqual({
-            path: [ 0 ],
+            path: [0],
             originalIndex: 0,
             isGroupHeader: false,
             groupIndex: 0,
             contentIndex: 0,
-            groupRows: -1
+            groupRows: -1,
         });
         expect(result.current.mapper(1)).toEqual({
-            path: [ 1 ],
+            path: [1],
             originalIndex: 1,
             isGroupHeader: false,
             groupIndex: 1,
             contentIndex: 1,
-            groupRows: -1
+            groupRows: -1,
         });
     });
 
@@ -43,12 +39,12 @@ describe("useRowGrouping - mapper", () => {
         const { result } = renderHook(() => useRowGrouping(rowGroupingOptions, totalRows));
 
         expect(result.current.mapper(0)).toEqual({
-            path: [ 0, -1 ],
+            path: [0, -1],
             originalIndex: 0,
             isGroupHeader: true,
             groupIndex: -1,
             contentIndex: -1,
-            groupRows: 1
+            groupRows: 1,
         });
     });
 
@@ -65,13 +61,12 @@ describe("useRowGrouping - mapper", () => {
         const { result } = renderHook(() => useRowGrouping(rowGroupingOptions, totalRows));
 
         expect(result.current.mapper(1)).toEqual({
-            path: [ 0, 0 ],
+            path: [0, 0],
             originalIndex: 1,
             isGroupHeader: false,
             groupIndex: 0,
             contentIndex: 0,
-            groupRows: 1
+            groupRows: 1,
         });
     });
-
 });

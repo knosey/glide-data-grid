@@ -1,5 +1,5 @@
-import { describe, it, expect, afterEach } from "vitest";
-import { renderHook, cleanup } from "@testing-library/react-hooks";
+import { describe, it, expect } from "vitest";
+import { renderHook } from "@testing-library/react";
 import {
     expandRowGroups,
     flattenRowGroups,
@@ -194,10 +194,6 @@ describe("flattenRowGroups", () => {
 });
 
 describe("useRowGroupingInner - getRowThemeOverride", () => {
-    afterEach(async () => {
-        await cleanup();
-    });
-
     it("returns undefined for getRowThemeOverride when no themeOverride is provided and no row grouping options", () => {
         const { result } = renderHook(() => useRowGroupingInner(undefined, 5, 20, undefined));
 
@@ -259,10 +255,6 @@ describe("useRowGroupingInner - getRowThemeOverride", () => {
 });
 
 describe("useRowGroupingInner - rowHeight", () => {
-    afterEach(async () => {
-        await cleanup();
-    });
-
     it("applies provided group row height for group headers", () => {
         const rowGroupingOptions: RowGroupingOptions = {
             groups: [
@@ -355,10 +347,6 @@ describe("useRowGroupingInner - rowHeight", () => {
 });
 
 describe("useRowGroupingInner - rows", () => {
-    afterEach(async () => {
-        await cleanup();
-    });
-
     it("calculates rows correctly with no row grouping options", () => {
         const totalRows = 5;
         const { result } = renderHook(() => useRowGroupingInner(undefined, totalRows, 20, undefined));
@@ -441,10 +429,6 @@ describe("useRowGroupingInner - rows", () => {
 });
 
 describe("useRowGroupingInner - rowNumberMapper", () => {
-    afterEach(async () => {
-        await cleanup();
-    });
-
     it("maps row numbers correctly without any row grouping", () => {
         const totalRows = 10;
         const { result } = renderHook(() => useRowGroupingInner(undefined, totalRows, 20, undefined));

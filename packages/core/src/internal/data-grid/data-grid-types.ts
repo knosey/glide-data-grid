@@ -395,7 +395,7 @@ export type ProvideEditorComponent<T extends InnerGridCell> = React.FunctionComp
     readonly forceEditMode: boolean;
     readonly isValid?: boolean;
     readonly theme: Theme;
-    readonly portalElementRef?: React.RefObject<HTMLElement>;
+    readonly portalElementRef?: React.RefObject<HTMLElement | null>;
     readonly activation?: CellActivatedEventArgs;
 }>;
 
@@ -434,7 +434,7 @@ export type ValidatedGridCell = EditableGridCell & {
 };
 
 /** @category Cells */
-export interface CustomCell<T extends {} = {}> extends BaseGridCell {
+export interface CustomCell<T extends object = object> extends BaseGridCell {
     readonly kind: GridCellKind.Custom;
     readonly data: T;
     readonly copyData: string;

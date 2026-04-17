@@ -47,7 +47,7 @@ export interface DrawArgs<T extends InnerGridCell> extends BaseDrawArgs {
 export interface PrepResult {
     font: string | undefined;
     fillStyle: string | undefined;
-    renderer: {};
+    renderer: object;
     deprep: ((args: Pick<BaseDrawArgs, "ctx">) => void) | undefined;
 }
 

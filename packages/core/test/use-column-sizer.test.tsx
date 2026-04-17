@@ -1,4 +1,4 @@
-import { renderHook, cleanup } from "@testing-library/react-hooks";
+import { renderHook, act, cleanup } from "@testing-library/react";
 import { type GridCell, GridCellKind, type GridColumn, type Rectangle } from "../src/index.js";
 import { getDataEditorTheme, mergeAndRealizeTheme } from "../src/common/styles.js";
 import type { DataGridSearchProps } from "../src/internal/data-grid-search/data-grid-search.js";
@@ -7,6 +7,13 @@ import type { GetCellRendererCallback } from "../src/cells/cell-types.js";
 import type { CellArray, CustomCell } from "../src/internal/data-grid/data-grid-types.js";
 import { useColumnSizer } from "../src/data-editor/use-column-sizer.js";
 import { vi, expect, describe, it, beforeEach, afterEach } from "vitest";
+
+// Clean up any remaining DOM elements after each test
+afterEach(() => {
+    cleanup();
+    // Also remove any canvases that might have been left behind
+    document.querySelectorAll("canvas").forEach(canvas => canvas.remove());
+});
 
 const COLUMNS: GridColumn[] = [
     {
@@ -89,10 +96,6 @@ describe("use-column-sizer", () => {
     beforeEach(() => {
         getShortCellsForSelection.mockClear();
         getLongCellsForSelection.mockClear();
-    });
-
-    afterEach(async () => {
-        await cleanup();
     });
 
     it("Measures a simple cell", async () => {
@@ -185,13 +188,15 @@ describe("use-column-sizer", () => {
                 400,
                 20,
                 500,
-                mergeAndRealizeTheme(theme, {cellHorizontalPadding: 12}),
+                mergeAndRealizeTheme(theme, { cellHorizontalPadding: 12 }),
                 getCellRenderer,
                 abortController
             )
         );
 
-        const columnA = result.current.sizedColumns.find(col => col.title === "Some very very long title that exceeds displayData width");
+        const columnA = result.current.sizedColumns.find(
+            col => col.title === "Some very very long title that exceeds displayData width"
+        );
         const columnB = result.current.sizedColumns.find(col => col.title === "Short title");
 
         expect(columnA).toBeDefined();
@@ -359,7 +364,10 @@ describe("use-column-sizer", () => {
 
         expect(document.querySelector("canvas")).toBeDefined();
 
-        unmount();
+        // Wrap unmount in act and flush all pending work
+        await act(async () => {
+            unmount();
+        });
 
         expect(document.querySelector("canvas")).toBeNull();
     });

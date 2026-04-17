@@ -1,4 +1,4 @@
-import { renderHook, cleanup } from "@testing-library/react-hooks";
+import { renderHook } from "@testing-library/react";
 import { useAnimationQueue } from "../src/internal/data-grid/use-animation-queue.js";
 import { vi, expect, describe, it, beforeEach, afterEach } from "vitest";
 import { CellSet } from "../src/internal/data-grid/cell-set.js";
@@ -23,10 +23,8 @@ describe("use-cell-sizer", () => {
         //     clearTimeout(rafID);
         // };
     });
-    afterEach(async () => {
+    afterEach(() => {
         vi.useRealTimers();
-
-        await cleanup();
 
         // window.requestAnimationFrame = OG_RAF;
         // window.cancelAnimationFrame = OG_CAF;

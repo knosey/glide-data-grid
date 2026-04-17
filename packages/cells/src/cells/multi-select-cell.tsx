@@ -120,9 +120,7 @@ export const resolveValues = (
     });
 };
 
-interface CustomMenuProps extends MenuProps<any> {}
-
-const CustomMenu: React.FC<CustomMenuProps> = p => {
+const CustomMenu: React.FC<MenuProps<any>> = p => {
     const { Menu } = components;
     const { children, ...rest } = p;
     return <Menu {...rest}>{children}</Menu>;
@@ -162,12 +160,7 @@ const SelectableMultiValueLabel: React.FC<MultiValueGenericProps<SelectOption>> 
         },
     };
 
-    return (
-        <components.MultiValueLabel
-            {...props}
-            innerProps={enhancedInnerProps as typeof props.innerProps}
-        />
-    );
+    return <components.MultiValueLabel {...props} innerProps={enhancedInnerProps as typeof props.innerProps} />;
 };
 
 export type MultiSelectCell = CustomCell<MultiSelectCellProps>;

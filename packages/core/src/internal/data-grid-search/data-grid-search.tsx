@@ -141,10 +141,10 @@ const DataGridSearch: React.FunctionComponent<DataGridSearchProps> = p => {
         }
     }, [rows, searchResultsIn]);
 
-    const abortControllerRef = React.useRef() as React.MutableRefObject<AbortController>;
+    const abortControllerRef = React.useRef<AbortController | undefined>(undefined);
     if (abortControllerRef.current === undefined) abortControllerRef.current = new AbortController();
 
-    const searchHandle = React.useRef<number>();
+    const searchHandle = React.useRef<number>(undefined);
     const [searchResultsInner, setSearchResultsInner] = React.useState<readonly Item[]>([]);
     const searchResults = searchResultsIn ?? searchResultsInner;
 
@@ -191,7 +191,7 @@ const DataGridSearch: React.FunctionComponent<DataGridSearchProps> = p => {
                         width: columns.length,
                         height: Math.min(searchStride, rowsLeft, rows - startY),
                     },
-                    abortControllerRef.current.signal
+                    abortControllerRef.current!.signal
                 );
 
                 if (typeof data === "function") {
@@ -413,7 +413,8 @@ const DataGridSearch: React.FunctionComponent<DataGridSearchProps> = p => {
                 onMouseDown={cancelEvent}
                 onMouseMove={cancelEvent}
                 onMouseUp={cancelEvent}
-                onClick={cancelEvent}>
+                onClick={cancelEvent}
+            >
                 <div className="gdg-search-bar-inner">
                     <input
                         id={searchID}
@@ -431,7 +432,8 @@ const DataGridSearch: React.FunctionComponent<DataGridSearchProps> = p => {
                         aria-hidden={!showSearch}
                         tabIndex={showSearch ? undefined : -1}
                         onClick={onPrev}
-                        disabled={(searchStatus?.results ?? 0) === 0}>
+                        disabled={(searchStatus?.results ?? 0) === 0}
+                    >
                         {upArrow}
                     </button>
                     <button
@@ -440,7 +442,8 @@ const DataGridSearch: React.FunctionComponent<DataGridSearchProps> = p => {
                         aria-hidden={!showSearch}
                         tabIndex={showSearch ? undefined : -1}
                         onClick={onNext}
-                        disabled={(searchStatus?.results ?? 0) === 0}>
+                        disabled={(searchStatus?.results ?? 0) === 0}
+                    >
                         {downArrow}
                     </button>
                     {onSearchClose !== undefined && (
@@ -450,7 +453,8 @@ const DataGridSearch: React.FunctionComponent<DataGridSearchProps> = p => {
                             aria-hidden={!showSearch}
                             data-testid="search-close-button"
                             tabIndex={showSearch ? undefined : -1}
-                            onClick={onClose}>
+                            onClick={onClose}
+                        >
                             {closeX}
                         </button>
                     )}

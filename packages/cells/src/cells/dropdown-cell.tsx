@@ -13,9 +13,7 @@ import {
     TextCellEntry,
 } from "@glideapps/glide-data-grid";
 
-interface CustomMenuProps extends MenuProps<any> {}
-
-const CustomMenu: React.FC<CustomMenuProps> = p => {
+const CustomMenu: React.FC<MenuProps<any>> = p => {
     const { Menu } = components;
     const { children, ...rest } = p;
     return <Menu {...rest}>{children}</Menu>;
@@ -151,7 +149,7 @@ const Editor: ReturnType<ProvideEditorCallback<DropdownCell>> = p => {
                         },
                     };
                 }}
-                menuPortalTarget={portalElementRef?.current ??  document.getElementById("portal")}
+                menuPortalTarget={portalElementRef?.current ?? document.getElementById("portal")}
                 autoFocus={true}
                 openMenuOnFocus={true}
                 components={{
@@ -194,7 +192,7 @@ const renderer: CustomRenderer<DropdownCell> = {
             return opt.value === value;
         });
 
-        const displayText = typeof foundOption === "string" ? foundOption : foundOption?.label ?? "";
+        const displayText = typeof foundOption === "string" ? foundOption : (foundOption?.label ?? "");
         if (displayText) {
             ctx.fillStyle = theme.textDark;
             ctx.fillText(
